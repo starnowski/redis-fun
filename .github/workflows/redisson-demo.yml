@@ -10,17 +10,17 @@ jobs:
     container: node:10.18-jessie
 
     # Service containers to run with `container-job`
-    services:
-      # Label used to access the service container
-      redis:
-        # Docker Hub image
-        image: redis
-        # Set health checks to wait until redis has started
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+#    services:
+#      # Label used to access the service container
+#      redis:
+#        # Docker Hub image
+#        image: redis
+#        # Set health checks to wait until redis has started
+#        options: >-
+#          --health-cmd "redis-cli ping"
+#          --health-interval 10s
+#          --health-timeout 5s
+#          --health-retries 5
 
     steps:
       # Downloads a copy of the code in your repository before running CI tests
@@ -32,5 +32,9 @@ jobs:
         with:
           distribution: 'zulu' # See 'Supported distributions' for available options
           java-version: '8'
+      - name: Start Redis
+        uses: supercharge/redis-github-action@1.4.0
+        with:
+          redis-version: 6
       - name: Build with Maven and run tests
         run: cd redisson-demo && ./mvnw clean install
