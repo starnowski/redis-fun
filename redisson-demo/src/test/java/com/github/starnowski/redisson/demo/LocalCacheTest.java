@@ -9,6 +9,8 @@ import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -57,18 +59,26 @@ public class LocalCacheTest {
 
     @Order(2)
     @org.junit.jupiter.api.Test
-    public void shouldReadFromMap()
-    {
+    public void shouldReadFromMap() throws InterruptedException {
         // GIVEN
-        rLocalCachedMap2.clearLocalCache();
+        int maxRetries = 15;
+        int delayInMilliseconds = 1000;
+        TestObject result = null;
 
         // WHEN
-        TestObject result = rLocalCachedMap2.get("key1");
+        for (int i = 0; i < maxRetries; i++){
+            result = rLocalCachedMap2.get("key1");
+            if (result != null) {
+                break;
+            }
+            Thread.sleep(delayInMilliseconds);
+        }
 
         // THEN
+        TestObject getOperationResult = result;
         assertAll("stored key from different map",
-                () -> assertNotNull(result, "key is not null"),
-                () -> assertEquals(result.getValue(), "First value")
+                () -> assertNotNull(getOperationResult, "key is not null"),
+                () -> assertEquals(getOperationResult.getValue(), "First value")
         );
     }
 
