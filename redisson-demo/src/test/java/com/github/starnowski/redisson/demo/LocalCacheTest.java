@@ -25,6 +25,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public class LocalCacheTest {
 
     public static final String KEY_1 = "key1";
+    public static RedissonClient client1;
+    public static RedissonClient client2;
     private static RLocalCachedMap<String, TestObject> rLocalCachedMap1;
     private static RLocalCachedMap<String, TestObject> rLocalCachedMap2;
 
@@ -36,8 +38,8 @@ public class LocalCacheTest {
         config.useSingleServer()
                 .setAddress("redis://127.0.0.1:6379");
 
-        RedissonClient client1 = Redisson.create(config);
-        RedissonClient client2 = Redisson.create(config);
+        client1 = Redisson.create(config);
+        client2 = Redisson.create(config);
         LocalCachedMapOptions<String, TestObject> rLocalCachedMap1Options = LocalCachedMapOptions.defaults();
         rLocalCachedMap1Options.syncStrategy(LocalCachedMapOptions.SyncStrategy.UPDATE);
         LocalCachedMapOptions<String, TestObject> rLocalCachedMap2Options = LocalCachedMapOptions.defaults();
@@ -63,6 +65,8 @@ public class LocalCacheTest {
         assertAll("stored key",
                 () -> assertEquals(result.getValue(), "First value")
         );
+        //TODO Shutdown client 1 to release memory and resources
+        client1.shutdown();
     }
 
     @Order(2)
