@@ -70,8 +70,8 @@ public class LocalCacheTest {
         assertAll("stored key",
                 () -> assertEquals(result.getValue(), "First value")
         );
-        //TODO Shutdown client 1 to release memory and resources
-        client1.shutdown();
+//        //TODO Shutdown client 1 to release memory and resources
+//        client1.shutdown();
     }
 
     @Order(2)
