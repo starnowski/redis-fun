@@ -11,8 +11,7 @@ import org.redisson.config.Config;
 import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Check https://github.com/redisson/redisson/wiki/7.-distributed-collections
@@ -48,7 +47,7 @@ public class LocalCacheTest {
 
         // THEN
         TestObject result = rLocalCachedMap1.get("key1");
-        assertAll("numbers",
+        assertAll("stored key",
                 () -> assertEquals(result.getValue(), "First value")
         );
     }
@@ -57,12 +56,15 @@ public class LocalCacheTest {
     @org.junit.jupiter.api.Test
     public void shouldReadFromMap()
     {
+        // GIVEN
+        rLocalCachedMap2.preloadCache();
 
         // WHEN
         TestObject result = rLocalCachedMap2.get("key1");
 
         // THEN
-        assertAll("numbers",
+        assertAll("stored key from different map",
+                () -> assertNotNull(result, "key is not null"),
                 () -> assertEquals(result.getValue(), "First value")
         );
     }
