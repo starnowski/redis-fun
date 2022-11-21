@@ -42,12 +42,13 @@ public class LocalCacheTest {
         client2 = Redisson.create(config);
         LocalCachedMapOptions<String, TestObject> rLocalCachedMap1Options = LocalCachedMapOptions.defaults();
 //        rLocalCachedMap1Options.syncStrategy(LocalCachedMapOptions.SyncStrategy.UPDATE);
+        rLocalCachedMap1Options.syncStrategy(LocalCachedMapOptions.SyncStrategy.INVALIDATE);
         LocalCachedMapOptions<String, TestObject> rLocalCachedMap2Options = LocalCachedMapOptions.defaults();
         rLocalCachedMap2Options
 //                .timeToLive(10, TimeUnit.SECONDS) // Available only for paid version
 //                .storeMode(LocalCachedMapOptions.StoreMode.LOCALCACHE)
                 .storeMode(LocalCachedMapOptions.StoreMode.LOCALCACHE_REDIS)
-                .reconnectionStrategy(LocalCachedMapOptions.ReconnectionStrategy.LOAD)
+//                .reconnectionStrategy(LocalCachedMapOptions.ReconnectionStrategy.LOAD)
         ;
         rLocalCachedMap1 = client1.getLocalCachedMap("anyMap", rLocalCachedMap1Options);
         rLocalCachedMap2 = client2.getLocalCachedMap("anyMap", rLocalCachedMap2Options);
