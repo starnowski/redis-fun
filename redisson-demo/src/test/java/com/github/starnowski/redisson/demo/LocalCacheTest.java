@@ -53,6 +53,20 @@ public class LocalCacheTest {
         );
     }
 
+    @Order(2)
+    @org.junit.jupiter.api.Test
+    public void shouldReadFromMap()
+    {
+
+        // WHEN
+        TestObject result = rLocalCachedMap2.get("key1");
+
+        // THEN
+        assertAll("numbers",
+                () -> assertEquals(result.getValue(), "First value")
+        );
+    }
+
     private static class TestObject implements Serializable {
 
         public String getValue() {
