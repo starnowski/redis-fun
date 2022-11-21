@@ -36,8 +36,10 @@ public class LocalCacheTest {
                 .setAddress("redis://127.0.0.1:6379");
 
         client = Redisson.create(config);
+        LocalCachedMapOptions<String, TestObject> rLocalCachedMap2Options = LocalCachedMapOptions.defaults();
+        rLocalCachedMap2Options.timeToLive(10, TimeUnit.SECONDS);
         rLocalCachedMap1 = client.getLocalCachedMap("anyMap", LocalCachedMapOptions.defaults());
-        rLocalCachedMap2 = client.getLocalCachedMap("anyMap", LocalCachedMapOptions.defaults());
+        rLocalCachedMap2 = client.getLocalCachedMap("anyMap", rLocalCachedMap2Options);
     }
 
     @Order(1)
