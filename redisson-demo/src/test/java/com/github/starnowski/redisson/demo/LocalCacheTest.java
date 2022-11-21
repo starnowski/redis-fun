@@ -60,6 +60,7 @@ public class LocalCacheTest {
     public void shouldReadFromMap()
     {
         // GIVEN
+        rLocalCachedMap2.clearLocalCache();
 
         // WHEN
         TestObject result = rLocalCachedMap2.get("key1");
