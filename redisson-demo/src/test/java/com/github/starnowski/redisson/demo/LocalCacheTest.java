@@ -41,19 +41,23 @@ public class LocalCacheTest {
         client1 = Redisson.create(config);
         client2 = Redisson.create(config);
         LocalCachedMapOptions<String, TestObject> rLocalCachedMap1Options = LocalCachedMapOptions.defaults();
-        rLocalCachedMap1Options.syncStrategy(LocalCachedMapOptions.SyncStrategy.UPDATE);
+//        rLocalCachedMap1Options.syncStrategy(LocalCachedMapOptions.SyncStrategy.UPDATE);
         LocalCachedMapOptions<String, TestObject> rLocalCachedMap2Options = LocalCachedMapOptions.defaults();
-//        rLocalCachedMap2Options
+        rLocalCachedMap2Options
 //                .timeToLive(10, TimeUnit.SECONDS) // Available only for paid version
-//        ;
+//                .storeMode(LocalCachedMapOptions.StoreMode.LOCALCACHE)
+                .storeMode(LocalCachedMapOptions.StoreMode.LOCALCACHE_REDIS)
+                .reconnectionStrategy(LocalCachedMapOptions.ReconnectionStrategy.LOAD)
+        ;
         rLocalCachedMap1 = client1.getLocalCachedMap("anyMap", rLocalCachedMap1Options);
         rLocalCachedMap2 = client2.getLocalCachedMap("anyMap", rLocalCachedMap2Options);
     }
 
     @Order(1)
     @org.junit.jupiter.api.Test
-    public void shouldUpdateMap()
+    public void test1ShouldUpdateMap()
     {
+        System.out.println("test1ShouldUpdateMap");
         // GIVEN
         TestObject testObject = new TestObject("First value");
 
@@ -71,7 +75,8 @@ public class LocalCacheTest {
 
     @Order(2)
     @org.junit.jupiter.api.Test
-    public void shouldReadFromMap() throws InterruptedException {
+    public void test2ShouldReadFromMap() throws InterruptedException {
+        System.out.println("test2ShouldReadFromMap");
         // GIVEN
         int maxRetries = 120;
         int delayInMilliseconds = 1000;
