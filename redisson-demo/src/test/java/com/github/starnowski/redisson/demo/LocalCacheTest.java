@@ -8,6 +8,7 @@ import org.redisson.api.RLocalCachedMap;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
 
+import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -25,6 +26,8 @@ public class LocalCacheTest {
     @BeforeAll
     static void setup() {
         Config config = new Config();
+        // sudo docker run --name some-redis -p 6379:6379 redis
+        // sudo docker run --name some-redis -p 6379:6379 -d redis
         config.useSingleServer()
                 .setAddress("redis://127.0.0.1:6379");
 
@@ -50,7 +53,7 @@ public class LocalCacheTest {
         );
     }
 
-    private static class TestObject {
+    private static class TestObject implements Serializable {
 
         public String getValue() {
             return value;
