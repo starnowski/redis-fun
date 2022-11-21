@@ -67,6 +67,7 @@ public class LocalCacheTest {
 
         // WHEN
         for (int i = 0; i < maxRetries; i++){
+            System.out.println("shouldReadFromMap attempt: " + i);
             result = rLocalCachedMap2.get("key1");
             if (result != null) {
                 break;
@@ -77,7 +78,7 @@ public class LocalCacheTest {
         // THEN
         TestObject getOperationResult = result;
         assertAll("stored key from different map",
-                () -> assertNotNull(getOperationResult, "key is not null"),
+                () -> assertNotNull(getOperationResult, "key is null"),
                 () -> assertEquals(getOperationResult.getValue(), "First value")
         );
     }
