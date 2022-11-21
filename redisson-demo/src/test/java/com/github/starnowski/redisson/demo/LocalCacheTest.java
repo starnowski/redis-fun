@@ -15,6 +15,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Check https://github.com/redisson/redisson/wiki/7.-distributed-collections
+ *
+ * https://github.com/redisson/redisson/issues/2220
+ * https://medium.com/turtlemint-engineering-blog/handling-distributed-cache-and-synchronisation-locks-using-redisson-c1838331b0b2
  */
 public class LocalCacheTest {
 
@@ -57,7 +60,6 @@ public class LocalCacheTest {
     public void shouldReadFromMap()
     {
         // GIVEN
-        rLocalCachedMap2.preloadCache();
 
         // WHEN
         TestObject result = rLocalCachedMap2.get("key1");
