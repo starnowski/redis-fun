@@ -61,7 +61,7 @@ public class LocalCacheTest {
     @org.junit.jupiter.api.Test
     public void shouldReadFromMap() throws InterruptedException {
         // GIVEN
-        int maxRetries = 15;
+        int maxRetries = 60;
         int delayInMilliseconds = 1000;
         TestObject result = null;
 
