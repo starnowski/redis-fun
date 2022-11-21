@@ -77,6 +77,7 @@ public class LocalCacheTest {
         for (int i = 0; i < maxRetries; i++){
             System.out.println("shouldReadFromMap attempt: " + i);
             result = rLocalCachedMap2.get(KEY_1);
+            System.out.println(String.format("Size : %d Size in memory: %d", rLocalCachedMap2.size(), rLocalCachedMap2.sizeInMemory()));
             if (result != null) {
                 break;
             }
