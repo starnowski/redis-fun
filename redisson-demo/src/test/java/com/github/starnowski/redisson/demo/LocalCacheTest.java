@@ -20,10 +20,11 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * https://github.com/redisson/redisson/issues/2220
  * https://medium.com/turtlemint-engineering-blog/handling-distributed-cache-and-synchronisation-locks-using-redisson-c1838331b0b2
+ * https://redisson.org/glossary/cache-miss.html
  */
 public class LocalCacheTest {
 
-    private static RedissonClient client;
+    public static final String KEY_1 = "key1";
     private static RLocalCachedMap<String, TestObject> rLocalCachedMap1;
     private static RLocalCachedMap<String, TestObject> rLocalCachedMap2;
 
@@ -35,11 +36,16 @@ public class LocalCacheTest {
         config.useSingleServer()
                 .setAddress("redis://127.0.0.1:6379");
 
-        client = Redisson.create(config);
+        RedissonClient client1 = Redisson.create(config);
+        RedissonClient client2 = Redisson.create(config);
+        LocalCachedMapOptions<String, TestObject> rLocalCachedMap1Options = LocalCachedMapOptions.defaults();
+        rLocalCachedMap1Options.syncStrategy(LocalCachedMapOptions.SyncStrategy.UPDATE);
         LocalCachedMapOptions<String, TestObject> rLocalCachedMap2Options = LocalCachedMapOptions.defaults();
-        rLocalCachedMap2Options.timeToLive(10, TimeUnit.SECONDS);
-        rLocalCachedMap1 = client.getLocalCachedMap("anyMap", LocalCachedMapOptions.defaults());
-        rLocalCachedMap2 = client.getLocalCachedMap("anyMap", rLocalCachedMap2Options);
+//        rLocalCachedMap2Options
+//                .timeToLive(10, TimeUnit.SECONDS) // Available only for paid version
+//        ;
+        rLocalCachedMap1 = client1.getLocalCachedMap("anyMap", rLocalCachedMap1Options);
+        rLocalCachedMap2 = client2.getLocalCachedMap("anyMap", rLocalCachedMap2Options);
     }
 
     @Order(1)
@@ -50,10 +56,10 @@ public class LocalCacheTest {
         TestObject testObject = new TestObject("First value");
 
         // WHEN
-        rLocalCachedMap1.put("key1", testObject);
+        rLocalCachedMap1.put(KEY_1, testObject);
 
         // THEN
-        TestObject result = rLocalCachedMap1.get("key1");
+        TestObject result = rLocalCachedMap1.get(KEY_1);
         assertAll("stored key",
                 () -> assertEquals(result.getValue(), "First value")
         );
@@ -70,7 +76,7 @@ public class LocalCacheTest {
         // WHEN
         for (int i = 0; i < maxRetries; i++){
             System.out.println("shouldReadFromMap attempt: " + i);
-            result = rLocalCachedMap2.get("key1");
+            result = rLocalCachedMap2.get(KEY_1);
             if (result != null) {
                 break;
             }
